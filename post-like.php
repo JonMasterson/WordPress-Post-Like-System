@@ -39,7 +39,7 @@ function enqueue_icons () {
 	wp_register_style( 'icon-style', 'http://netdna.bootstrapcdn.com/font-awesome/3.1.1/css/font-awesome.css' );
     wp_enqueue_style( 'icon-style' );
 }
-add_action( 'wp_enqueue_style', 'enqueue_icons' );
+add_action( 'wp_enqueue_script', 'enqueue_icons' );
 
 /**
  * (3) Save like data
