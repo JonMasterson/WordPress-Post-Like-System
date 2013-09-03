@@ -1,0 +1,45 @@
+/* Post Like System */
+.post-like { /* default for all */
+	width: auto;
+	font-size: 13px;
+	font-size: 0.928571429rem;
+	line-height: 1.846153846;
+}
+.post-like a { /* default for links */
+	font-weight: normal;
+	display: inline-block;
+	width: auto;
+	-moz-transition: all 0.3s ease-out 0.2s;
+	-webkit-transition: all 0.3s ease-out 0.2s;
+	-o-transition: all 0.3s ease-out 0.2s;
+	color: #666;
+}
+.post-like a > .like { /* space for X */
+	padding-left: 2px;
+}
+.post-like .count { /* default for count */
+	width: auto;
+	display: inline-block;
+}
+.post-like a > .unliker  { /* hides the remove link */
+	opacity: 0;
+	filter:alpha(opacity=0);
+	width: 0;
+	display: inline-block;
+}
+.post-like a:hover > .unliker  { /* shows the remove link */
+	opacity: 1;
+	filter:alpha(opacity=100);
+	width: auto;
+}
+.post-like .liked,
+.post-like .alreadyliked { /* red on like */
+	color: #da1b1b;
+}
+.post-like .disliked { /* default on unlike */
+	color: #666;
+}
+.post-like a:hover,
+.post-like .disliked:hover  { /* default on hover */
+	color: #000;
+}
