@@ -15,7 +15,7 @@ jQuery(document).ready(function() {
 					var lecount = count.replace("already","");
 					if (lecount == 0)
 					{
-						var lecount = "";
+						var lecount = "Like";
 					}
 					heart.children(".like").removeClass("liked").addClass("disliked").html("<i class='icon-heart'></i>");
 					heart.children(".unliker").text("");
