@@ -184,12 +184,12 @@ if ( ( !$like_count ) || ( $like_count && $like_count == "0" ) ) { // no votes, 
 	$likes = esc_attr( $like_count );
 }
 	$output = '<span class="post-like">';
-	$output .= '<a title="'.__( 'Like This', $themename ).'" href="#" data-post_id="'.$post_id.'">';
+	$output .= '<a href="#" data-post_id="'.$post_id.'">';
 	if ( AlreadyLiked( $post_id ) ) { // already liked, set up unlike addon
-		$output .= '<span class="unliker"><i class="icon-remove-sign"></i></span><span class="like alreadyliked"><i class="icon-heart"></i></span>';
+		$output .= '<span class="unliker"><i class="icon-remove-sign"></i></span><span class="like prevliked"><i class="fa fa-heart"></i></span>';
 		$output .= ' <span class="count alreadyliked">'.$likes.'</span></a></span>&nbsp; ';
 	} else { // normal like button
-		$output .= '<span class="unliker"></span><span class="like"><i class="icon-heart"></i></span>';
+		$output .= '<span class="unliker"></span><span class="like"><i class="fa fa-heart"></i></span>';
 		$output .= ' <span class="count">'.$likes.'</span></a></span>&nbsp; ';
 	}
 	return $output;
