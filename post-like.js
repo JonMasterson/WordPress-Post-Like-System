@@ -17,14 +17,14 @@ jQuery(document).ready(function() {
 					{
 						var lecount = "Like";
 					}
-					heart.children(".like").removeClass("liked").addClass("disliked").html("<i class='icon-heart'></i>");
+					heart.children(".like").removeClass("pastliked").addClass("disliked").html("<i class='fa fa-heart'></i>");
 					heart.children(".unliker").text("");
 					heart.children(".count").removeClass("liked").addClass("disliked").text(lecount);
 				}
 				else
 				{
-					heart.children(".like").addClass("liked").removeClass("disliked").html("<i class='icon-heart'></i>");
-					heart.children(".unliker").html("<i class='icon-remove-sign'></i>");
+					heart.children(".like").addClass("pastliked").removeClass("disliked").html("<i class='fa fa-heart'></i>");
+					heart.children(".unliker").html("<i class='fa fa-times-sign'></i>");
 					heart.children(".count").addClass("liked").removeClass("disliked").text(count);
 				}
 			}
