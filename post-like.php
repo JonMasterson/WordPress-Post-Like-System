@@ -186,7 +186,7 @@ if ( ( !$like_count ) || ( $like_count && $like_count == "0" ) ) { // no votes, 
 	$output = '<span class="post-like">';
 	$output .= '<a href="#" data-post_id="'.$post_id.'">';
 	if ( AlreadyLiked( $post_id ) ) { // already liked, set up unlike addon
-		$output .= '<span class="unliker"><i class="icon-remove-sign"></i></span><span class="like prevliked"><i class="fa fa-heart"></i></span>';
+		$output .= '<span class="unliker"><i class="fa fa-times-circle"></i></span><span class="like prevliked"><i class="fa fa-heart"></i></span>';
 		$output .= ' <span class="count alreadyliked">'.$likes.'</span></a></span>&nbsp; ';
 	} else { // normal like button
 		$output .= '<span class="unliker"></span><span class="like"><i class="fa fa-heart"></i></span>';
