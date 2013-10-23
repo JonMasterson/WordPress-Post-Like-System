@@ -24,7 +24,7 @@ jQuery(document).ready(function() {
 				else
 				{
 					heart.children(".like").addClass("pastliked").removeClass("disliked").html("<i class='fa fa-heart'></i>");
-					heart.children(".unliker").html("<i class='fa fa-times-sign'></i>");
+					heart.children(".unliker").html("<i class='fa fa-times-circle'></i>");
 					heart.children(".count").addClass("liked").removeClass("disliked").text(count);
 				}
 			}
