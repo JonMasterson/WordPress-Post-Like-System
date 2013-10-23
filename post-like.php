@@ -24,7 +24,7 @@ add_action( 'init', 'like_scripts' );
  * (2) Add Fontawesome Icons
  */
 function enqueue_icons () {
-	wp_register_style( 'icon-style', 'http://netdna.bootstrapcdn.com/font-awesome/3.1.1/css/font-awesome.css' );
+	wp_register_style( 'icon-style', 'http://netdna.bootstrapcdn.com/font-awesome/4.0.0/css/font-awesome.css' );
     wp_enqueue_style( 'icon-style' );
 }
 add_action( 'wp_enqueue_scripts', 'enqueue_icons' );
