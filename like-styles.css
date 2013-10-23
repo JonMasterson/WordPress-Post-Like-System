@@ -33,13 +33,38 @@
 	width: auto;
 }
 .post-like .liked,
-.post-like .alreadyliked { /* red on like */
+.post-like .alreadyliked,
+.post-like .prevliked,
+.post-like .pastliked { /* red on like */
 	color: #da1b1b;
+}
+.post-like a:hover > .prevliked,
+.post-like a:active > .prevliked,
+.post-like a:focus > .prevliked,
+.post-like a:hover > .pastliked,
+.post-like a:active > .pastliked,
+.post-like a:focus > .pastliked {
+	display: none;
+	width: 0;
 }
 .post-like .disliked { /* default on unlike */
 	color: #666;
 }
+.post-like a:hover > .disliked,
+.post-like a:active > .disliked,
+.post-like a:focus > .disliked {
+	display: inline-block;
+	width: auto;
+}
 .post-like a:hover,
-.post-like .disliked:hover  { /* default on hover */
+.post-like a:hover > .disliked,
+.post-like a:active > .disliked,
+.post-like a:focus > .disliked,
+.post-like a:hover > .alreadyliked,
+.post-like a:active > .alreadyliked,
+.post-like a:focus > .alreadyliked,
+.post-like a:hover > .liked,
+.post-like a:active > .liked,
+.post-like a:focus > .liked { /* default on hover */
 	color: #000;
 }
