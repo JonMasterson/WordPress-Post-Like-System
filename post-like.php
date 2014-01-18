@@ -2,7 +2,7 @@
 /*
 Name:  WordPress Post Like System
 Description:  A simple and efficient post like system for WordPress.
-Version:      0.1
+Version:      0.2
 Author:       Jon Masterson
 Author URI:   http://jonmasterson.com/
 */
@@ -11,8 +11,9 @@ Author URI:   http://jonmasterson.com/
  * (1) Enqueue scripts for like system
  */
 function like_scripts() {
-	wp_enqueue_script( 'like_post', get_template_directory_uri().'/js/post-like.js', array('jquery'), '1.0', 1 );
-	wp_localize_script( 'like_post', 'ajax_var', array(
+	wp_enqueue_script( 'fast_click', get_template_directory_uri().'/js/jQuery.fastClick.js', array('jquery'), '0.2', 1 );
+	wp_enqueue_script( 'jm_like_post', get_template_directory_uri().'/js/jm-post-like.js', array('jquery'), '1.0', 1 );
+	wp_localize_script( 'jm_like_post', 'ajax_var', array(
 		'url' => admin_url( 'admin-ajax.php' ),
 		'nonce' => wp_create_nonce( 'ajax-nonce' )
 		)
@@ -21,25 +22,16 @@ function like_scripts() {
 add_action( 'init', 'like_scripts' );
 
 /**
- * (2) Add Fontawesome Icons
- */
-function enqueue_icons () {
-	wp_register_style( 'icon-style', 'http://netdna.bootstrapcdn.com/font-awesome/4.0.0/css/font-awesome.css' );
-    wp_enqueue_style( 'icon-style' );
-}
-add_action( 'wp_enqueue_scripts', 'enqueue_icons' );
-
-/**
  * (3) Save like data
  */
-add_action( 'wp_ajax_nopriv_post-like', 'post_like' );
-add_action( 'wp_ajax_post-like', 'post_like' );
-function post_like() {
+add_action( 'wp_ajax_nopriv_jm-post-like', 'jm_post_like' );
+add_action( 'wp_ajax_jm-post-like', 'jm_post_like' );
+function jm_post_like() {
 	$nonce = $_POST['nonce'];
     if ( ! wp_verify_nonce( $nonce, 'ajax-nonce' ) )
         die ( 'Nope!' );
 	
-	if ( isset( $_POST['post_like'] ) ) {
+	if ( isset( $_POST['jm_post_like'] ) ) {
 	
 		$post_id = $_POST['post_id']; // post id
 		$post_like_count = get_post_meta( $post_id, "_post_like_count", true ); // post like count
@@ -177,13 +169,13 @@ return false;
 function getPostLikeLink( $post_id ) {
 	$theme_object = wp_get_theme();
 	$themename = esc_attr( $theme_object->Name ); // the theme name
-$like_count = get_post_meta( $post_id, "_post_like_count", true ); // get post likes
-if ( ( !$like_count ) || ( $like_count && $like_count == "0" ) ) { // no votes, set up empty variable
-	$likes = 'Like';
-} elseif ( $like_count && $like_count != "0" ) { // there are votes!
-	$likes = esc_attr( $like_count );
-}
-	$output = '<span class="post-like">';
+	$like_count = get_post_meta( $post_id, "_post_like_count", true ); // get post likes
+	if ( ( !$like_count ) || ( $like_count && $like_count == "0" ) ) { // no votes, set up empty variable
+		$likes = 'Like';
+	} elseif ( $like_count && $like_count != "0" ) { // there are votes!
+		$likes = esc_attr( $like_count );
+	}
+	$output = '<span class="jm-post-like">';
 	$output .= '<a href="#" data-post_id="'.$post_id.'">';
 	if ( AlreadyLiked( $post_id ) ) { // already liked, set up unlike addon
 		$output .= '<span class="unliker"><i class="fa fa-times-circle"></i></span><span class="like prevliked"><i class="fa fa-heart"></i></span>';
