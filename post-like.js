@@ -1,6 +1,6 @@
 jQuery(document).ready(function() {
 
-	jQuery(".post-like a").click(function(){
+	jQuery(".jm-post-like a").fastClick(function(){
 	
 		heart = jQuery(this);
 		post_id = heart.data("post_id");
@@ -8,7 +8,7 @@ jQuery(document).ready(function() {
 		jQuery.ajax({
 			type: "post",
 			url: ajax_var.url,
-			data: "action=post-like&nonce="+ajax_var.nonce+"&post_like=&post_id="+post_id,
+			data: "action=jm-post-like&nonce="+ajax_var.nonce+"&jm_post_like=&post_id="+post_id,
 			success: function(count){
 				if( count.indexOf( "already" ) !== -1 )
 				{
