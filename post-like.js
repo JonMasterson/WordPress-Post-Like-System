@@ -1,7 +1,7 @@
 jQuery(document).ready(function() {
 
-	jQuery(".jm-post-like a").fastClick(function(){
-	
+	jQuery(".jm-post-like a").fastClick(function(event){
+		event.preventDefault();
 		heart = jQuery(this);
 		post_id = heart.data("post_id");
 		
@@ -29,8 +29,5 @@ jQuery(document).ready(function() {
 				}
 			}
 		});
-		
-		return false;
 	})
-	
 })
