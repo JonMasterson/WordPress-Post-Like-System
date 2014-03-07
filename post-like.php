@@ -2,7 +2,7 @@
 /*
 Name:  WordPress Post Like System
 Description:  A simple and efficient post like system for WordPress.
-Version:      0.2
+Version:      0.3
 Author:       Jon Masterson
 Author URI:   http://jonmasterson.com/
 */
@@ -12,7 +12,8 @@ Author URI:   http://jonmasterson.com/
  */
 function like_scripts() {
 	wp_enqueue_script( 'fast_click', get_template_directory_uri().'/js/jQuery.fastClick.js', array('jquery'), '0.2', 1 );
-	wp_enqueue_script( 'jm_like_post', get_template_directory_uri().'/js/post-like.js', array('jquery'), '1.0', 1 );
+	wp_enqueue_script( 'jm_like_post', get_template_directory_uri().'/js/jm-post-like.js', array('jquery'), '1.0', 1 );
+	wp_enqueue_style( 'jm_like_style', get_template_directory_uri().'/css/jm-post-like.css' );
 	wp_localize_script( 'jm_like_post', 'ajax_var', array(
 		'url' => admin_url( 'admin-ajax.php' ),
 		'nonce' => wp_create_nonce( 'ajax-nonce' )
@@ -20,15 +21,6 @@ function like_scripts() {
 	);
 }
 add_action( 'init', 'like_scripts' );
-
-/**
- * (2) Add Fontawesome Icons
- */
-function enqueue_icons () {
-	wp_register_style( 'icon-style', 'http://netdna.bootstrapcdn.com/font-awesome/4.0.0/css/font-awesome.css' );
-    wp_enqueue_style( 'icon-style' );
-}
-add_action( 'wp_enqueue_scripts', 'enqueue_icons' );
 
 /**
  * (3) Save like data
@@ -50,8 +42,8 @@ function jm_post_like() {
 			$user_id = $current_user->ID; // current user
 			$meta_POSTS = get_user_meta( $user_id, "_liked_posts" ); // post ids from user meta
 			$meta_USERS = get_post_meta( $post_id, "_user_liked" ); // user ids from post meta
-			$liked_POSTS = ""; // setup array variable
-			$liked_USERS = ""; // setup array variable
+			$liked_POSTS = NULL; // setup array variable
+			$liked_USERS = NULL; // setup array variable
 			
 			if ( count( $meta_POSTS ) != 0 ) { // meta exists, set up values
 				$liked_POSTS = $meta_POSTS[0];
@@ -77,7 +69,7 @@ function jm_post_like() {
 				update_user_meta( $user_id, "_liked_posts", $liked_POSTS ); // Add post ID to user meta
 				update_user_meta( $user_id, "_user_like_count", $user_likes ); // +1 count user meta
 				echo $post_like_count; // update count on front end
-				
+
 			} else { // unlike the post
 				$pid_key = array_search( $post_id, $liked_POSTS ); // find the key
 				$uid_key = array_search( $user_id, $liked_USERS ); // find the key
@@ -95,7 +87,7 @@ function jm_post_like() {
 		} else { // user is not logged in (anonymous)
 			$ip = $_SERVER['REMOTE_ADDR']; // user IP address
 			$meta_IPS = get_post_meta( $post_id, "_user_IP" ); // stored IP addresses
-			$liked_IPS = ""; // set up array variable
+			$liked_IPS = NULL; // set up array variable
 			
 			if ( count( $meta_IPS ) != 0 ) { // meta exists, set up values
 				$liked_IPS = $meta_IPS[0];
@@ -153,21 +145,21 @@ function AlreadyLiked( $post_id ) { // test if user liked before
 		
 	} else { // user is anonymous, use IP address for voting
 	
-$meta_IPS = get_post_meta($post_id, "_user_IP"); // get previously voted IP address
-$ip = $_SERVER["REMOTE_ADDR"]; // Retrieve current user IP
-$liked_IPS = ""; // set up array variable
-
-if ( count( $meta_IPS ) != 0 ) { // meta exists, set up values
-	$liked_IPS = $meta_IPS[0];
-}
-
-if ( !is_array( $liked_IPS ) ) // make array just in case
-	$liked_IPS = array();
-
-if ( in_array( $ip, $liked_IPS ) ) { // True is IP in array
-	return true;
-}
-return false;
+		$meta_IPS = get_post_meta( $post_id, "_user_IP" ); // get previously voted IP address
+		$ip = $_SERVER["REMOTE_ADDR"]; // Retrieve current user IP
+		$liked_IPS = ""; // set up array variable
+		
+		if ( count( $meta_IPS ) != 0 ) { // meta exists, set up values
+			$liked_IPS = $meta_IPS[0];
+		}
+		
+		if ( !is_array( $liked_IPS ) ) // make array just in case
+			$liked_IPS = array();
+		
+		if ( in_array( $ip, $liked_IPS ) ) { // True is IP in array
+			return true;
+		}
+		return false;
 	}
 	
 }
@@ -176,23 +168,18 @@ return false;
  * (5) Front end button
  */
 function getPostLikeLink( $post_id ) {
-	$theme_object = wp_get_theme();
-	$themename = esc_attr( $theme_object->Name ); // the theme name
 	$like_count = get_post_meta( $post_id, "_post_like_count", true ); // get post likes
-	if ( ( !$like_count ) || ( $like_count && $like_count == "0" ) ) { // no votes, set up empty variable
-		$likes = 'Like';
-	} elseif ( $like_count && $like_count != "0" ) { // there are votes!
-		$likes = esc_attr( $like_count );
+	$count = ( empty( $like_count ) || $like_count == "0" ) ? 'Like' : esc_attr( $like_count );
+	if ( AlreadyLiked( $post_id ) ) {
+		$class = esc_attr( ' liked' );
+		$title = esc_attr( 'Unlike' );
+		$heart = '<i class="fa fa-heart"></i>';
+	} else {
+		$class = esc_attr( '' );
+		$title = esc_attr( 'Like' );
+		$heart = '<i class="fa fa-heart-o"></i>';
 	}
-	$output = '<span class="jm-post-like">';
-	$output .= '<a href="#" data-post_id="'.$post_id.'">';
-	if ( AlreadyLiked( $post_id ) ) { // already liked, set up unlike addon
-		$output .= '<span class="unliker"><i class="fa fa-times-circle"></i></span><span class="like prevliked"><i class="fa fa-heart"></i></span>';
-		$output .= ' <span class="count alreadyliked">'.$likes.'</span></a></span>&nbsp; ';
-	} else { // normal like button
-		$output .= '<span class="unliker"></span><span class="like"><i class="fa fa-heart"></i></span>';
-		$output .= ' <span class="count">'.$likes.'</span></a></span>&nbsp; ';
-	}
+	$output = '<a href="#" class="jm-post-like'.$class.'" data-post_id="'.$post_id.'" title="'.$title.'">'.$heart.'&nbsp;'.$count.'</a>';
 	return $output;
 }
 
@@ -208,7 +195,7 @@ function show_user_likes( $user ) { ?>
 			<td>
             <?php global $current_user;
 			$user_likes = get_user_meta( $user->ID, "_liked_posts");
-			if ( $user_likes && count( $user_likes ) > 0 ) {
+			if ( !empty( $user_likes ) && count( $user_likes ) > 0 ) {
 				$the_likes = $user_likes[0];
 			} else {
 				$the_likes = '';
@@ -234,3 +221,12 @@ function show_user_likes( $user ) { ?>
 		</tr>
     </table>
 <?php }
+
+/**
+ * (7) Add a shortcode to your posts instead
+ */
+function jm_like_shortcode() {
+	return getPostLikeLink( get_the_ID() );
+}
+add_shortcode('jmliker', 'jm_like_shortcode');
+// type [jmliker] in your post to output the button
