@@ -213,16 +213,16 @@ function show_user_likes( $user ) { ?>
 			$count = count($the_likes); $i=0;
 			if ( $count > 0 ) {
 				$like_list = '';
-				echo '<p>';
+				echo "<p>\n";
 				foreach ( $the_likes as $the_like ) {
 					$i++;
-					$like_list .= '<a href="' . esc_url( get_permalink( $the_like ) ) . '" title="' . esc_attr( get_the_title( $the_like ) ) . '">' . get_the_title( $the_like ) . '</a>';
-					if ($count != $i) $like_list .= ' &middot; ';
-					else $like_list .= '</p>';
+					$like_list .= "<a href='" . esc_url( get_permalink( $the_like ) ) . "' title='" . esc_attr( get_the_title( $the_like ) ) . "'>" . get_the_title( $the_like ) . "</a>";
+					if ($count != $i) $like_list .= " &middot; ";
+					else $like_list .= "</p>\n";
 				}
 				echo $like_list;
 			} else {
-				echo '<p>You don\'t like anything yet.</p>';
+				echo "<p>You don\'t like anything yet.</p>\n";
 			} ?>
             </td>
 		</tr>
@@ -231,9 +231,162 @@ function show_user_likes( $user ) { ?>
 
 /**
  * (7) Add a shortcode to your posts instead
+ * type [jmliker] in your post to output the button
  */
 function jm_like_shortcode() {
 	return getPostLikeLink( get_the_ID() );
 }
 add_shortcode('jmliker', 'jm_like_shortcode');
-// type [jmliker] in your post to output the button
+
+/**
+ * (8) If the user is logged in, output a list of posts that the user likes
+ * Markup assumes sidebar/widget usage
+ */
+function frontEndUserLikes() {
+	$theme_object = wp_get_theme();
+	$themename = esc_attr( $theme_object->Name ); // the theme name
+	if ( is_user_logged_in() ) { // user is logged in
+		global $current_user;
+		$like_list = '';
+		$user_id = $current_user->ID; // current user
+		$user_likes = get_user_meta( $user_id, "_liked_posts");
+		$the_likes = ( $user_likes && count( $user_likes ) > 0 ) ? $the_likes = $user_likes[0] : $the_likes = '' ;
+		if ( !is_array( $the_likes ) )
+			$the_likes = array();
+		$count = count($the_likes);
+		if ( $count > 0 ) {
+			$limited_likes = array_slice( $the_likes, 0, 5 ); // this will limit the number of posts returned to 5
+			$like_list .= "<aside>\n";
+			$like_list .= "<h3>" . __( 'You Like:', $themename ) . "</h3>\n";
+			$like_list .= "<ul>\n";
+			foreach ( $limited_likes as $the_like ) {
+				$like_list .= "<li><a href='" . esc_url( get_permalink( $the_like ) ) . "' title='" . esc_attr( get_the_title( $the_like ) ) . "'>" . get_the_title( $the_like ) . "</a></li>\n";
+			}
+			$like_list .= "</ul>\n";
+			$like_list .= "</aside>\n";
+		}
+		echo $like_list;
+	}
+}
+
+/**
+ * (9) Outputs a list of the 5 posts with the most user likes TODAY
+ * Markup assumes sidebar/widget usage
+ */
+function jm_most_popular_today() {
+	global $post;
+	$today = date('j');
+  	$year = date('Y');
+	$args = array(
+		'year' => $year,
+		'day' => $today,
+		'post_type' => array( 'post', 'enter-your-comma-separated-post-types-here' ),
+		'meta_key' => '_post_like_count',
+		'orderby' => 'meta_value_num',
+		'order' => 'DESC',
+		'posts_per_page' => 5
+		);
+	$pop_posts = new WP_Query( $args );
+	if ( $pop_posts->have_posts() ) {
+		echo "<aside>\n";
+		echo "<h3>Today's Most Popular Posts</h3>\n";
+		echo "<ul>\n";
+		while ( $pop_posts->have_posts() ) {
+			$pop_posts->the_post();
+			echo "<li><a href='" . get_permalink($post->ID) . "'>" . get_the_title() . "</a></li>\n";
+		}
+		echo "</ul>\n";
+		echo "</aside>\n";
+	}
+	wp_reset_postdata();
+}
+
+/**
+ * (10) Outputs a list of the 5 posts with the most user likes for THIS MONTH
+ * Markup assumes sidebar/widget usage
+ */
+function jm_most_popular_month() {
+	global $post;
+	$month = date('m');
+  	$year = date('Y');
+	$args = array(
+		'year' => $year,
+		'monthnum' => $month,
+		'post_type' => array( 'post', 'enter-your-comma-separated-post-types-here' ),
+		'meta_key' => '_post_like_count',
+		'orderby' => 'meta_value_num',
+		'order' => 'DESC',
+		'posts_per_page' => 5
+		);
+	$pop_posts = new WP_Query( $args );
+	if ( $pop_posts->have_posts() ) {
+		echo "<aside>\n";
+		echo "<h3>This Month's Most Popular Posts</h3>\n";
+		echo "<ul>\n";
+		while ( $pop_posts->have_posts() ) {
+			$pop_posts->the_post();
+			echo "<li><a href='" . get_permalink($post->ID) . "'>" . get_the_title() . "</a></li>\n";
+		}
+		echo "</ul>\n";
+		echo "</aside>\n";
+	}
+	wp_reset_postdata();
+}
+
+/**
+ * (11) Outputs a list of the 5 posts with the most user likes for THIS WEEK
+ * Markup assumes sidebar/widget usage
+ */
+function jm_most_popular_week() {
+	global $post;
+	$week = date('W');
+  	$year = date('Y');
+	$args = array(
+		'year' => $year,
+		'w' => $week,
+		'post_type' => array( 'post', 'enter-your-comma-separated-post-types-here' ),
+		'meta_key' => '_post_like_count',
+		'orderby' => 'meta_value_num',
+		'order' => 'DESC',
+		'posts_per_page' => 5
+		);
+	$pop_posts = new WP_Query( $args );
+	if ( $pop_posts->have_posts() ) {
+		echo "<aside>\n";
+		echo "<h3>This Week's Most Popular Posts</h3>\n";
+		echo "<ul>\n";
+		while ( $pop_posts->have_posts() ) {
+			$pop_posts->the_post();
+			echo "<li><a href='" . get_permalink($post->ID) . "'>" . get_the_title() . "</a></li>\n";
+		}
+		echo "</ul>\n";
+		echo "</aside>\n";
+	}
+	wp_reset_postdata();
+}
+
+/**
+ * (12) Outputs a list of the 5 posts with the most user likes for ALL TIME
+ * Markup assumes sidebar/widget usage
+ */
+function jm_most_popular() {
+	global $post;
+	echo "<aside>\n";
+	echo "<h3>Most Popular Posts</h3>\n";
+	echo "<ul>\n";
+	$args = array(
+		 'post_type' => array( 'post', 'enter-your-comma-separated-post-types-here' ),
+		 'meta_key' => '_post_like_count',
+		 'orderby' => 'meta_value_num',
+		 'order' => 'DESC',
+		 'posts_per_page' => 5 
+		 );
+	$pop_posts = new WP_Query( $args );
+	while ( $pop_posts->have_posts() ) {
+		$pop_posts->the_post();
+		echo "<li><a href='" . get_permalink($post->ID) . "'>" . get_the_title() . "</a></li>\n";
+	}
+	wp_reset_postdata();
+	echo "</ul>\n";
+	echo "</aside>\n";
+}
