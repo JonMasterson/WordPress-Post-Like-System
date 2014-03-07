@@ -3,6 +3,7 @@ jQuery(document).ready(function() {
 		event.preventDefault();
 		heart = jQuery(this);
 		post_id = heart.data("post_id");
+		heart.html("<i class='fa fa-heart'></i>&nbsp;<i class='fa fa-cog fa-spin'></i>");
 		jQuery.ajax({
 			type: "post",
 			url: ajax_var.url,
