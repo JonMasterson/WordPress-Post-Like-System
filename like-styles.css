@@ -1,70 +1,23 @@
 /* Post Like System */
-.jm-post-like { /* default for all */
+a.jm-post-like {
+	font-weight: normal;
+	display: inline-block;
 	width: auto;
 	font-size: 13px;
 	font-size: 0.928571429rem;
 	line-height: 1.846153846;
-}
-.jm-post-like a { /* default for links */
-	font-weight: normal;
-	display: inline-block;
-	width: auto;
 	-moz-transition: all 0.3s ease-out 0.2s;
 	-webkit-transition: all 0.3s ease-out 0.2s;
 	-o-transition: all 0.3s ease-out 0.2s;
-	color: #666;
 }
-.jm-post-like a > .like { /* space for X */
-	padding-left: 2px;
-}
-.jm-post-like .count { /* default for count */
-	width: auto;
-	display: inline-block;
-}
-.jm-post-like a > .unliker  { /* hides the remove link */
-	opacity: 0;
-	filter:alpha(opacity=0);
-	width: 0;
-	display: inline-block;
-}
-.jm-post-like a:hover > .unliker  { /* shows the remove link */
-	opacity: 1;
-	filter:alpha(opacity=100);
-	width: auto;
-}
-.jm-post-like .liked,
-.jm-post-like .alreadyliked,
-.jm-post-like .prevliked,
-.jm-post-like .pastliked { /* red on like */
+a.jm-post-like.liked {
 	color: #da1b1b;
 }
-.jm-post-like a:hover > .prevliked,
-.jm-post-like a:active > .prevliked,
-.jm-post-like a:focus > .prevliked,
-.jm-post-like a:hover > .pastliked,
-.jm-post-like a:active > .pastliked,
-.jm-post-like a:focus > .pastliked {
-	display: none;
-	width: 0;
-}
-.jm-post-like .disliked { /* default on unlike */
-	color: #666;
-}
-.jm-post-like a:hover > .disliked,
-.jm-post-like a:active > .disliked,
-.jm-post-like a:focus > .disliked {
-	display: inline-block;
-	width: auto;
-}
-.jm-post-like a:hover,
-.jm-post-like a:hover > .disliked,
-.jm-post-like a:active > .disliked,
-.jm-post-like a:focus > .disliked,
-.jm-post-like a:hover > .alreadyliked,
-.jm-post-like a:active > .alreadyliked,
-.jm-post-like a:focus > .alreadyliked,
-.jm-post-like a:hover > .liked,
-.jm-post-like a:active > .liked,
-.jm-post-like a:focus > .liked { /* default on hover */
+a.jm-post-like:hover,
+a.jm-post-like:active,
+a.jm-post-like:focus,
+a.liked:hover,
+a.liked:active,
+a.liked:focus { /* default on hover */
 	color: #000;
 }
