@@ -1,10 +1,8 @@
 jQuery(document).ready(function() {
-
-	jQuery(".jm-post-like a").fastClick(function(event){
+	jQuery('body').on('click','.jm-post-like',function(event){
 		event.preventDefault();
 		heart = jQuery(this);
 		post_id = heart.data("post_id");
-		
 		jQuery.ajax({
 			type: "post",
 			url: ajax_var.url,
@@ -17,17 +15,17 @@ jQuery(document).ready(function() {
 					{
 						var lecount = "Like";
 					}
-					heart.children(".like").removeClass("pastliked").addClass("disliked").html("<i class='fa fa-heart'></i>");
-					heart.children(".unliker").text("");
-					heart.children(".count").removeClass("liked").addClass("disliked").text(lecount);
+					heart.prop('title', 'Like');
+					heart.removeClass("liked");
+					heart.html("<i class='fa fa-heart-o'></i>&nbsp;"+lecount);
 				}
 				else
 				{
-					heart.children(".like").addClass("pastliked").removeClass("disliked").html("<i class='fa fa-heart'></i>");
-					heart.children(".unliker").html("<i class='fa fa-times-circle'></i>");
-					heart.children(".count").addClass("liked").removeClass("disliked").text(count);
+					heart.prop('title', 'Unlike');
+					heart.addClass("liked");
+					heart.html("<i class='fa fa-heart'></i>&nbsp;"+count);
 				}
 			}
 		});
-	})
-})
+	});
+});
