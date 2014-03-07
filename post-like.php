@@ -2,7 +2,7 @@
 /*
 Name:  WordPress Post Like System
 Description:  A simple and efficient post like system for WordPress.
-Version:      0.3
+Version:      0.3.1
 Author:       Jon Masterson
 Author URI:   http://jonmasterson.com/
 */
