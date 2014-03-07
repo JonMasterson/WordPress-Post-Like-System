@@ -11,7 +11,7 @@ Author URI:   http://jonmasterson.com/
  * (1) Enqueue scripts for like system
  */
 function like_scripts() {
-	wp_enqueue_script( 'jm_like_post', get_template_directory_uri().'/js/jm-post-like.js', array('jquery'), '1.0', 1 );
+	wp_enqueue_script( 'jm_like_post', get_template_directory_uri().'/js/post-like.js', array('jquery'), '1.0', 1 );
 	wp_localize_script( 'jm_like_post', 'ajax_var', array(
 		'url' => admin_url( 'admin-ajax.php' ),
 		'nonce' => wp_create_nonce( 'ajax-nonce' )
