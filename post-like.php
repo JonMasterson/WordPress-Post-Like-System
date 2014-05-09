@@ -53,7 +53,7 @@ function jm_post_like() {
 			$liked_USERS = NULL; // setup array variable
 			
 			if ( count( $meta_POSTS ) != 0 ) { // meta exists, set up values
-				$liked_POSTS = $meta_POSTS[0];
+				$liked_POSTS = ( is_multisite() ) ? $meta_POSTS : $meta_POSTS[0];
 			}
 			
 			if ( !is_array( $liked_POSTS ) ) // make array just in case
@@ -209,7 +209,7 @@ function show_user_likes( $user ) { ?>
             <?php
 			$user_likes = ( is_multisite() ) ? get_user_option( "_liked_posts", $user->ID ) : get_user_meta( $user->ID, "_liked_posts" );
 			if ( !empty( $user_likes ) && count( $user_likes ) > 0 ) {
-				$the_likes = $user_likes[0];
+				$the_likes = ( is_multisite() ) ? $user_likes : $user_likes[0];
 			} else {
 				$the_likes = '';
 			}
@@ -222,7 +222,7 @@ function show_user_likes( $user ) { ?>
 				echo "<p>\n";
 				foreach ( $the_likes as $the_like ) {
 					$i++;
-					$like_list .= "<a href=\"" . esc_url( get_permalink( $the_like ) ) . "\" title=\"" . esc_attr( get_the_title( $the_like ) ) . "\">" . get_the_title( $the_like ) . "</a>";
+					$like_list .= "<a href=\"" . esc_url( get_permalink( $the_like ) ) . "\" title=\"" . esc_attr( get_the_title( $the_like ) ) . "\">" . get_the_title( $the_like ) . "</a>\n";
 					if ($count != $i) $like_list .= " &middot; ";
 					else $like_list .= "</p>\n";
 				}
@@ -252,11 +252,15 @@ function frontEndUserLikes() {
 	if ( is_user_logged_in() ) { // user is logged in
 		$like_list = '';
 		$user_id = get_current_user_id(); // current user
-		$user_likes = get_user_option( "_liked_posts", $user_id );
-		$the_likes = ( $user_likes && count( $user_likes ) > 0 ) ? $the_likes = $user_likes[0] : $the_likes = '' ;
+		$user_likes = ( is_multisite() ) ? get_user_option( "_liked_posts", $user_id ) : get_user_meta( $user_id, "_liked_posts" );
+		if ( !empty( $user_likes ) && count( $user_likes ) > 0 ) {
+			$the_likes = ( is_multisite() ) ? $user_likes : $user_likes[0];
+		} else {
+			$the_likes = '';
+		}
 		if ( !is_array( $the_likes ) )
 			$the_likes = array();
-		$count = count($the_likes);
+		$count = count( $the_likes );
 		if ( $count > 0 ) {
 			$limited_likes = array_slice( $the_likes, 0, 5 ); // this will limit the number of posts returned to 5
 			$like_list .= "<aside>\n";
