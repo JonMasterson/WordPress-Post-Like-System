@@ -45,15 +45,14 @@ function jm_post_like() {
 		$post_like_count = get_post_meta( $post_id, "_post_like_count", true ); // post like count
 		
 		if ( is_user_logged_in() ) { // user is logged in
-			global $current_user;
-			$user_id = $current_user->ID; // current user
-			$meta_POSTS = ( is_multisite() ) ? get_user_option( "_liked_posts", $user_id  ) : get_user_meta( $user_id, "_liked_posts" ); // post ids from user meta
+			$user_id = get_current_user_id(); // current user
+			$meta_POSTS = get_user_option( "_liked_posts", $user_id  ); // post ids from user meta
 			$meta_USERS = get_post_meta( $post_id, "_user_liked" ); // user ids from post meta
 			$liked_POSTS = NULL; // setup array variable
 			$liked_USERS = NULL; // setup array variable
 			
 			if ( count( $meta_POSTS ) != 0 ) { // meta exists, set up values
-				$liked_POSTS = ( is_multisite() ) ? $meta_POSTS : $meta_POSTS[0];
+				$liked_POSTS = $meta_POSTS;
 			}
 			
 			if ( !is_array( $liked_POSTS ) ) // make array just in case
@@ -73,13 +72,8 @@ function jm_post_like() {
 			if ( !AlreadyLiked( $post_id ) ) { // like the post
 				update_post_meta( $post_id, "_user_liked", $liked_USERS ); // Add user ID to post meta
 				update_post_meta( $post_id, "_post_like_count", ++$post_like_count ); // +1 count post meta
-				if ( is_multisite() ) { // if multisite support
-					update_user_option( $user_id, "_liked_posts", $liked_POSTS ); // Add post ID to user meta
-					update_user_option( $user_id, "_user_like_count", $user_likes ); // +1 count user meta
-				} else {
-					update_user_meta( $user_id, "_liked_posts", $liked_POSTS ); // Add post ID to user meta
-					update_user_meta( $user_id, "_user_like_count", $user_likes ); // +1 count user meta
-				}
+				update_user_option( $user_id, "_liked_posts", $liked_POSTS ); // Add post ID to user meta
+				update_user_option( $user_id, "_user_like_count", $user_likes ); // +1 count user meta
 				echo $post_like_count; // update count on front end
 
 			} else { // unlike the post
@@ -90,13 +84,8 @@ function jm_post_like() {
 				$user_likes = count( $liked_POSTS ); // recount user likes
 				update_post_meta( $post_id, "_user_liked", $liked_USERS ); // Remove user ID from post meta
 				update_post_meta($post_id, "_post_like_count", --$post_like_count ); // -1 count post meta
-				if ( is_multisite() ) { // if multisite support
-					update_user_option( $user_id, "_liked_posts", $liked_POSTS ); // Remove post ID from user meta			
-					update_user_option( $user_id, "_user_like_count", $user_likes ); // -1 count user meta
-				} else {
-					update_user_meta( $user_id, "_liked_posts", $liked_POSTS ); // Add post ID to user meta
-					update_user_meta( $user_id, "_user_like_count", $user_likes ); // +1 count user meta
-				}
+				update_user_option( $user_id, "_liked_posts", $liked_POSTS ); // Remove post ID from user meta			
+				update_user_option( $user_id, "_user_like_count", $user_likes ); // -1 count user meta
 				echo "already".$post_like_count; // update count on front end
 				
 			}
@@ -151,7 +140,7 @@ function AlreadyLiked( $post_id ) { // test if user liked before
 		if( !is_array( $liked_USERS ) ) // make array just in case
 			$liked_USERS = array();
 			
-		if ( in_array( get_current_user_id(), $liked_USERS ) ) { // True if User ID in array
+		if ( in_array( $user_id, $liked_USERS ) ) { // True if User ID in array
 			return true;
 		}
 		return false;
@@ -182,17 +171,17 @@ function AlreadyLiked( $post_id ) { // test if user liked before
  */
 function getPostLikeLink( $post_id ) {
 	$like_count = get_post_meta( $post_id, "_post_like_count", true ); // get post likes
-	$count = ( empty( $like_count ) || $like_count == "0" ) ? '' : '&nbsp;-&nbsp;'.$like_count;
+	$count = ( empty( $like_count ) || $like_count == "0" ) ? 'Like' : esc_attr( $like_count );
 	if ( AlreadyLiked( $post_id ) ) {
-		$class = __(  ' liked' );
-		$title = __( 'Unlike' );
+		$class = esc_attr( ' liked' );
+		$title = esc_attr( 'Unlike' );
 		$heart = '<i class="fa fa-heart"></i>';
 	} else {
-		$class = __( '' );
-		$title = __( 'Like' );
+		$class = esc_attr( '' );
+		$title = esc_attr( 'Like' );
 		$heart = '<i class="fa fa-heart-o"></i>';
 	}
-	$output = '<a href="#" class="jm-post-like'.esc_attr( $class ).'" data-post_id="'.esc_attr( $post_id ).'" title="'.esc_attr( $title ).'">'.$heart.'&nbsp;'.$title.$count.'</a><span class="jm-load"></span>';
+	$output = '<a href="#" class="jm-post-like'.$class.'" data-post_id="'.$post_id.'" title="'.$title.'">'.$heart.'&nbsp;'.$count.'</a>';
 	return $output;
 }
 
@@ -207,9 +196,9 @@ function show_user_likes( $user ) { ?>
 			<th><label for="user_likes"><?php _e( 'You Like:' ); ?></label></th>
 			<td>
             <?php
-			$user_likes = ( is_multisite() ) ? get_user_option( "_liked_posts", $user->ID ) : get_user_meta( $user->ID, "_liked_posts" );
+			$user_likes = get_user_option( "_liked_posts", $user->ID );
 			if ( !empty( $user_likes ) && count( $user_likes ) > 0 ) {
-				$the_likes = ( is_multisite() ) ? $user_likes : $user_likes[0];
+				$the_likes = $user_likes;
 			} else {
 				$the_likes = '';
 			}
@@ -252,9 +241,9 @@ function frontEndUserLikes() {
 	if ( is_user_logged_in() ) { // user is logged in
 		$like_list = '';
 		$user_id = get_current_user_id(); // current user
-		$user_likes = ( is_multisite() ) ? get_user_option( "_liked_posts", $user_id ) : get_user_meta( $user_id, "_liked_posts" );
+		$user_likes = get_user_option( "_liked_posts", $user_id );
 		if ( !empty( $user_likes ) && count( $user_likes ) > 0 ) {
-			$the_likes = ( is_multisite() ) ? $user_likes : $user_likes[0];
+			$the_likes = $user_likes;
 		} else {
 			$the_likes = '';
 		}
