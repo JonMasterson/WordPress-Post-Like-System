@@ -12,9 +12,9 @@ jQuery(document).ready(function() {
 				if( count.indexOf( "already" ) !== -1 )
 				{
 					var lecount = count.replace("already","");
-					if (lecount == 0)
+					if (lecount === "0")
 					{
-						var lecount = "Like";
+						lecount = "Like";
 					}
 					heart.prop('title', 'Like');
 					heart.removeClass("liked");
