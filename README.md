@@ -7,7 +7,7 @@ Check out <a href="http://hofmannsven.com/2013/laboratory/wordpress-post-like-sy
 
 Originally, this system utilized <a href="http://fontawesome.io/" target="_blank">Font Awesome</a> for the heart and gear icons. The Font Awesome version is still available in the <em>vendor</em> folder for those who are already using Font Awesome in their theme.
 
-<h3>Four Steps to Glory</h3>
+<h3>Five Steps to Glory</h3>
 <ol>
   <li>Add the CSS to your theme's main stylesheet.</li>
   <li>Add <em>post-like.min.js</em> to your theme's <em>js</em> folder (if it exists). If there is no <em>js</em> folder at your theme's root level, create one and add <em>post-like.min.js</em> to it.</li>
@@ -15,7 +15,7 @@ Originally, this system utilized <a href="http://fontawesome.io/" target="_blank
   <li>Add the contents of post-like.php to your theme's functions.php file.</li>
   <li>Implement the button by doing one of the following:
     <ol>
-      <li>Add the button function to your theme's single page template (typically content-single.php) — <code><?php echo getPostLikeLink( get_the_ID() ); ?></code></li>
+      <li>Add the button function to your theme's single page template (typically content-single.php) — <code><php echo getPostLikeLink( get_the_ID() ); ?></code></li>
       <li>Include the [jmliker] shortcode in your posts</li>
     </ol>
   </li>
