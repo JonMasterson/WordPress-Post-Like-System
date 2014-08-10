@@ -37,7 +37,17 @@ function like_scripts() {
 add_action( 'init', 'like_scripts' );
 
 /**
- * (2) Save like data
+ * (2) Add Fontawesome Icons (optional, if not already added in theme)
+ *
+function enqueue_icons () {
+	wp_register_style( 'icon-style', 'http://netdna.bootstrapcdn.com/font-awesome/4.0.0/css/font-awesome.css' );
+    wp_enqueue_style( 'icon-style' );
+}
+add_action( 'wp_enqueue_scripts', 'enqueue_icons' );
+*/
+
+/**
+ * (3) Save like data
  */
 add_action( 'wp_ajax_nopriv_jm-post-like', 'jm_post_like' );
 add_action( 'wp_ajax_jm-post-like', 'jm_post_like' );
@@ -132,7 +142,7 @@ function jm_post_like() {
 }
 
 /**
- * (3) Test if user already liked post
+ * (4) Test if user already liked post
  */
 function AlreadyLiked( $post_id ) { // test if user liked before
 	if ( is_user_logged_in() ) { // user is logged in
@@ -174,7 +184,7 @@ function AlreadyLiked( $post_id ) { // test if user liked before
 }
 
 /**
- * (4) Front end button
+ * (5) Front end button
  */
 function getPostLikeLink( $post_id ) {
 	$like_count = get_post_meta( $post_id, "_post_like_count", true ); // get post likes
@@ -182,18 +192,18 @@ function getPostLikeLink( $post_id ) {
 	if ( AlreadyLiked( $post_id ) ) {
 		$class = esc_attr( ' liked' );
 		$title = esc_attr( 'Unlike' );
-		$heart = '<i id="icon-liked" class="icon-like"></i>';
+		$heart = '<i class="fa fa-heart"></i>';
 	} else {
 		$class = esc_attr( '' );
 		$title = esc_attr( 'Like' );
-		$heart = '<i id="icon-unliked" class="icon-unlike"></i>';
+		$heart = '<i class="fa fa-heart-o"></i>';
 	}
 	$output = '<a href="#" class="jm-post-like'.$class.'" data-post_id="'.$post_id.'" title="'.$title.'">'.$heart.'&nbsp;'.$count.'</a>';
 	return $output;
 }
 
 /**
- * (5) Retrieve User Likes and Show on Profile
+ * (6) Retrieve User Likes and Show on Profile
  */
 add_action( 'show_user_profile', 'show_user_likes' );
 add_action( 'edit_user_profile', 'show_user_likes' );
@@ -232,7 +242,7 @@ function show_user_likes( $user ) { ?>
 <?php }
 
 /**
- * (6) Add a shortcode to your posts instead
+ * (7) Add a shortcode to your posts instead
  * type [jmliker] in your post to output the button
  */
 function jm_like_shortcode() {
@@ -241,7 +251,7 @@ function jm_like_shortcode() {
 add_shortcode('jmliker', 'jm_like_shortcode');
 
 /**
- * (7) If the user is logged in, output a list of posts that the user likes
+ * (8) If the user is logged in, output a list of posts that the user likes
  * Markup assumes sidebar/widget usage
  */
 function frontEndUserLikes() {
@@ -273,7 +283,7 @@ function frontEndUserLikes() {
 }
 
 /**
- * (8) Outputs a list of the 5 posts with the most user likes TODAY
+ * (9) Outputs a list of the 5 posts with the most user likes TODAY
  * Markup assumes sidebar/widget usage
  */
 function jm_most_popular_today() {
@@ -305,7 +315,7 @@ function jm_most_popular_today() {
 }
 
 /**
- * (9) Outputs a list of the 5 posts with the most user likes for THIS MONTH
+ * (10) Outputs a list of the 5 posts with the most user likes for THIS MONTH
  * Markup assumes sidebar/widget usage
  */
 function jm_most_popular_month() {
@@ -337,7 +347,7 @@ function jm_most_popular_month() {
 }
 
 /**
- * (10) Outputs a list of the 5 posts with the most user likes for THIS WEEK
+ * (11) Outputs a list of the 5 posts with the most user likes for THIS WEEK
  * Markup assumes sidebar/widget usage
  */
 function jm_most_popular_week() {
@@ -369,7 +379,7 @@ function jm_most_popular_week() {
 }
 
 /**
- * (11) Outputs a list of the 5 posts with the most user likes for ALL TIME
+ * (12) Outputs a list of the 5 posts with the most user likes for ALL TIME
  * Markup assumes sidebar/widget usage
  */
 function jm_most_popular() {
