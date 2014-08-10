@@ -15,7 +15,7 @@ Originally, this system utilized <a href="http://fontawesome.io/" target="_blank
   <li>Add the contents of post-like.php to your theme's functions.php file.</li>
   <li>Implement the button by doing one of the following:
     <ol>
-      <li>Add the button function to your theme's single page template (typically content-single.php) — <em><php echo getPostLikeLink( get_the_ID() ); ?></em></li>
+      <li>Add the button function to your theme's single page template (typically content-single.php) — <em>echo getPostLikeLink( get_the_ID() );</em></li>
       <li>Include the [jmliker] shortcode in your posts</li>
     </ol>
   </li>
