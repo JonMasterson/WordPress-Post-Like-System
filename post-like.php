@@ -51,6 +51,11 @@ function jm_post_like() {
 		$post_id = $_POST['post_id']; // post id
 		$post_like_count = get_post_meta( $post_id, "_post_like_count", true ); // post like count
 		
+		if ( function_exists ( 'wp_cache_post_change' ) ) { // invalidate WP Super Cache if exists
+			$GLOBALS["super_cache_enabled"]=1;
+			wp_cache_post_change( $post_id );
+		}
+		
 		if ( is_user_logged_in() ) { // user is logged in
 			$user_id = get_current_user_id(); // current user
 			$meta_POSTS = get_user_option( "_liked_posts", $user_id  ); // post ids from user meta
