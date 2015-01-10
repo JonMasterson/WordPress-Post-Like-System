@@ -299,7 +299,13 @@ function jm_most_popular_today() {
 		'year' => $year,
 		'day' => $today,
 		'post_type' => array( 'post', 'enter-your-comma-separated-post-types-here' ),
-		'meta_key' => '_post_like_count',
+		'meta_query' => array(
+			  array(
+				  'key' => '_post_like_count',
+				  'value' => '0',
+				  'compare' => '>'
+			  )
+		  ),
 		'orderby' => 'meta_value_num',
 		'order' => 'DESC',
 		'posts_per_page' => 5
@@ -331,7 +337,13 @@ function jm_most_popular_month() {
 		'year' => $year,
 		'monthnum' => $month,
 		'post_type' => array( 'post', 'enter-your-comma-separated-post-types-here' ),
-		'meta_key' => '_post_like_count',
+		'meta_query' => array(
+			  array(
+				  'key' => '_post_like_count',
+				  'value' => '0',
+				  'compare' => '>'
+			  )
+		  ),
 		'orderby' => 'meta_value_num',
 		'order' => 'DESC',
 		'posts_per_page' => 5
@@ -363,7 +375,13 @@ function jm_most_popular_week() {
 		'year' => $year,
 		'w' => $week,
 		'post_type' => array( 'post', 'enter-your-comma-separated-post-types-here' ),
-		'meta_key' => '_post_like_count',
+		'meta_query' => array(
+			  array(
+				  'key' => '_post_like_count',
+				  'value' => '0',
+				  'compare' => '>'
+			  )
+		  ),
 		'orderby' => 'meta_value_num',
 		'order' => 'DESC',
 		'posts_per_page' => 5
@@ -394,7 +412,13 @@ function jm_most_popular() {
 	echo "<ul>\n";
 	$args = array(
 		 'post_type' => array( 'post', 'enter-your-comma-separated-post-types-here' ),
-		 'meta_key' => '_post_like_count',
+		 'meta_query' => array(
+			  array(
+				  'key' => '_post_like_count',
+				  'value' => '0',
+				  'compare' => '>'
+			  )
+		  ),
 		 'orderby' => 'meta_value_num',
 		 'order' => 'DESC',
 		 'posts_per_page' => 5 
