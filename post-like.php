@@ -296,6 +296,7 @@ function jm_most_popular_today() {
 				  'compare' => '>'
 			  )
 		  ),
+		'meta_key' => '_post_like_count',
 		'orderby' => 'meta_value_num',
 		'order' => 'DESC',
 		'posts_per_page' => 5
@@ -334,6 +335,7 @@ function jm_most_popular_month() {
 				  'compare' => '>'
 			  )
 		  ),
+		'meta_key' => '_post_like_count',
 		'orderby' => 'meta_value_num',
 		'order' => 'DESC',
 		'posts_per_page' => 5
@@ -372,6 +374,7 @@ function jm_most_popular_week() {
 				  'compare' => '>'
 			  )
 		  ),
+		'meta_key' => '_post_like_count',
 		'orderby' => 'meta_value_num',
 		'order' => 'DESC',
 		'posts_per_page' => 5
@@ -409,6 +412,7 @@ function jm_most_popular() {
 				  'compare' => '>'
 			  )
 		  ),
+		 'meta_key' => '_post_like_count',
 		 'orderby' => 'meta_value_num',
 		 'order' => 'DESC',
 		 'posts_per_page' => 5 
