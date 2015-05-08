@@ -27,6 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * (1) Enqueue scripts for like system
  */
 function like_scripts() {
+	wp_enqueue_script( 'jquery' );
 	wp_enqueue_script( 'jm_like_post', get_template_directory_uri().'/js/post-like.min.js', array('jquery'), '1.0', 1 );
 	wp_localize_script( 'jm_like_post', 'ajax_var', array(
 		'url' => admin_url( 'admin-ajax.php' ),
