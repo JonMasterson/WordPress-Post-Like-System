@@ -21,5 +21,14 @@ Originally, this system utilized <a href="http://fontawesome.io/" target="_blank
   </li>
 </ol>
 
-<h3>Troubleshooting</h3>
-This post like system is pretty simple, and does not have many moving parts. Some folks have encountered issues with AJAX-loaded content, and others have had some trouble with plugin conflicts. Feel free to open an issue if your stuck, and I will do my best to help you solve it.
+<h3>Most Liked Lists</h3>
+This system does not currently offer AJAX updates for functions 7-11. Originally, these functions were offered to show what could be done with this system, and were an afterthought. PHP functions are provided, but they will not update without a screen refresh.
+
+<h3>Issues</h3>
+<ul>
+<li>This post like system is pretty simple, and does not have many moving parts. Some folks have encountered issues with AJAX-loaded content, and others have had some trouble with plugin conflicts. Feel free to open an issue if your stuck, and I will do my best to help you solve it.</li>
+<li>Time-based retrieval of most liked lists (ex. "Most Popular Post This Week"), returns posts based on the time the post was published. This is inadequate — posts should be returned based on the time the post was liked.</li>
+</ul>
+
+<h3>Coming Soon</h3>
+This Post Like System will soon be offered as a free and premium plugin. The free plugin will have everything the current system does, but will be easier to manage from the WordPress admin (no more implementation errors). The premium plugin will offer AJAX widgets for functions 7-11 (and beyond) that will update & respond to likes without a screen refresh, and can be managed from the WordPress admin.
