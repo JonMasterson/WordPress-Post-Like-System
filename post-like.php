@@ -132,6 +132,8 @@ function jm_post_like() {
 				
 			}
 		}
+
+		echo ( $post_like_count < 1 ) ? '' : ' ' . ( $post_like_count == 1 ? __( 'Like', 'infinity' ) : __( 'Likes', 'infinity' ) );
 	}
 	
 	exit;
@@ -184,7 +186,8 @@ function AlreadyLiked( $post_id ) { // test if user liked before
  */
 function getPostLikeLink( $post_id ) {
 	$like_count = get_post_meta( $post_id, "_post_like_count", true ); // get post likes
-	$count = ( empty( $like_count ) || $like_count == "0" ) ? 'Like' : esc_attr( $like_count );
+	$count = ( empty( $like_count ) || $like_count == "0" ) ? 'Like' : sprintf( _n( '%s Like', '%s Likes', $like_count, 'infinity' ), $like_count );
+	$like_text = 0;
 	if ( AlreadyLiked( $post_id ) ) {
 		$class = esc_attr( ' liked' );
 		$title = esc_attr( 'Unlike' );
@@ -194,7 +197,8 @@ function getPostLikeLink( $post_id ) {
 		$title = esc_attr( 'Like' );
 		$heart = '<i id="icon-unlike" class="icon-unlike"></i>';
 	}
-	$output = '<a href="#" class="jm-post-like'.$class.'" data-post_id="'.$post_id.'" title="'.$title.'">'.$heart.'&nbsp;'.$count.'</a>';
+
+	$output = '<a href="#" class="jm-post-like'.$class.'" data-post_id="'.$post_id.'" title="'.$title.'">'.$heart.'&nbsp;'.$count .'</a>';
 	return $output;
 }
 
