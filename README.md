@@ -8,7 +8,7 @@ It's a bit outdated at this point, but check out <a href="http://hofmannsven.com
 <h3>Four Steps to Glory</h3>
 <ol>
   <li>Add the CSS to your theme's main stylesheet.</li>
-  <li>Add <em>post-like.min.js</em> to your theme's <em>js</em> folder (if it exists). If there is no <em>js</em> folder at your theme's root level, create one and add <em>post-like.min.js</em> to it.</li>
+  <li>Add the javascript file to your theme's <em>js</em> folder (if it exists). If there is no <em>js</em> folder at your theme's root level, create one and add <em>simple-likes-public.js</em> to it.</li>
   <li>Add the contents of post-like.php to your theme's functions.php file.</li>
   <li>Output the button by doing the following:
     <ul>
