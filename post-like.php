@@ -42,23 +42,23 @@ add_action( 'wp_ajax_nopriv_process_simple_like', 'process_simple_like' );
 add_action( 'wp_ajax_process_simple_like', 'process_simple_like' );
 function process_simple_like() {
 	// Security
-	$nonce = isset( $_REQUEST['nonce'] ) ? $_REQUEST['nonce'] : 0;
+	$nonce = isset( $_REQUEST['nonce'] ) ? sanitize_text_field( $_REQUEST['nonce'] ) : 0;
 	if ( !wp_verify_nonce( $nonce, 'simple-likes-nonce' ) ) {
 		exit( __( 'Not permitted', 'YourThemeTextDomain' ) );
 	}
 	// Test if javascript is disabled
-	$disabled = isset( $_REQUEST['disabled'] ) ? $_REQUEST['disabled'] : false;
+	$disabled = isset( $_REQUEST['disabled'] ) ? true : false;
 	// Test if this is a comment
-	$is_comment = isset( $_REQUEST['is_comment'] ) ? $_REQUEST['is_comment'] : 0;
+	$is_comment = isset( $_REQUEST['is_comment'] ) ? 1 : 0;
 	// Base variables
-	$post_id = isset( $_REQUEST['post_id'] ) ? intval( $_REQUEST['post_id'] ) : '';
+	$post_id = ( isset( $_REQUEST['post_id'] ) && is_numeric( $_REQUEST['post_id'] ) ) ? $_REQUEST['post_id'] : '';
 	$result = array();
 	$post_users = NULL;
 	$like_count = 0;
 	// Get plugin options
 	if ( $post_id != '' ) {
 		$count = ( $is_comment == 1 ) ? get_comment_meta( $post_id, "_comment_like_count", true ) : get_post_meta( $post_id, "_post_like_count", true ); // like count
-		$count = isset( $count ) ? intval( $count ) : 0;
+		$count = ( isset( $count ) && is_numeric( $count ) ) ? $count : 0;
 		if ( !already_liked( $post_id, $is_comment ) ) { // Like the post
 			if ( is_user_logged_in() ) { // user is logged in
 				$user_id = get_current_user_id();
@@ -66,6 +66,7 @@ function process_simple_like() {
 				if ( $is_comment == 1 ) {
 					// Update User & Comment
 					$user_like_count = get_user_option( "_comment_like_count", $user_id );
+					$user_like_count =  ( isset( $user_like_count ) && is_numeric( $user_like_count ) ) ? $user_like_count : 0;
 					update_user_option( $user_id, "_comment_like_count", ++$user_like_count );
 					if ( $post_users ) {
 						update_comment_meta( $post_id, "_user_comment_liked", $post_users );
@@ -73,6 +74,7 @@ function process_simple_like() {
 				} else {
 					// Update User & Post
 					$user_like_count = get_user_option( "_user_like_count", $user_id );
+					$user_like_count =  ( isset( $user_like_count ) && is_numeric( $user_like_count ) ) ? $user_like_count : 0;
 					update_user_option( $user_id, "_user_like_count", ++$user_like_count );
 					if ( $post_users ) {
 						update_post_meta( $post_id, "_user_liked", $post_users );
@@ -100,11 +102,13 @@ function process_simple_like() {
 				// Update User
 				if ( $is_comment == 1 ) {
 					$user_like_count = get_user_option( "_comment_like_count", $user_id );
+					$user_like_count =  ( isset( $user_like_count ) && is_numeric( $user_like_count ) ) ? $user_like_count : 0;
 					if ( $user_like_count > 0 ) {
 						update_user_option( $user_id, "_comment_like_count", --$user_like_count );
 					}
 				} else {
 					$user_like_count = get_user_option( "_user_like_count", $user_id );
+					$user_like_count =  ( isset( $user_like_count ) && is_numeric( $user_like_count ) ) ? $user_like_count : 0;
 					if ( $user_like_count > 0 ) {
 						update_user_option( $user_id, '_user_like_count', --$user_like_count );
 					}
@@ -192,17 +196,19 @@ function already_liked( $post_id, $is_comment ) {
  * @since    0.5
  */
 function get_simple_likes_button( $post_id, $is_comment = NULL ) {
-	$is_comment = ( NULL == $is_comment ) ? 0 : $is_comment;
+	$is_comment = ( NULL == $is_comment ) ? 0 : 1;
 	$output = '';
 	$nonce = wp_create_nonce( 'simple-likes-nonce' ); // Security
 	if ( $is_comment == 1 ) {
 		$post_id_class = ' sl-comment-button-' . $post_id;
 		$comment_class = ' sl-comment';
 		$like_count = get_comment_meta( $post_id, "_comment_like_count", true );
+		$like_count = ( isset( $like_count ) && is_numeric( $like_count ) ) ? $like_count : 0;
 	} else {
 		$post_id_class = ' sl-button-' . $post_id;
 		$comment_class = '';
 		$like_count = get_post_meta( $post_id, "_post_like_count", true );
+		$like_count = ( isset( $like_count ) && is_numeric( $like_count ) ) ? $like_count : 0;
 	}
 	$count = get_like_count( $like_count );
 	$icon_empty = get_unliked_icon();
@@ -323,6 +329,7 @@ function sl_format_count( $number ) {
 	} else {
 		$formatted = $number; // Number is less than 1000
 	}
+	$formatted = str_replace( '.00', '', $formatted );
 	return $formatted;
 } // sl_format_count()
 
@@ -334,8 +341,7 @@ function sl_format_count( $number ) {
 function get_like_count( $like_count ) {
 	$like_text = __( 'Like', 'YourThemeTextDomain' );
 	if ( is_numeric( $like_count ) && $like_count > 0 ) { 
-		$num = sl_format_count( $like_count );
-		$number = str_replace( '.00', '', $num );
+		$number = sl_format_count( $like_count );
 	} else {
 		$number = $like_text;
 	}
