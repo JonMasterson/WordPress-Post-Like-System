@@ -47,9 +47,9 @@ function process_simple_like() {
 		exit( __( 'Not permitted', 'YourThemeTextDomain' ) );
 	}
 	// Test if javascript is disabled
-	$disabled = isset( $_REQUEST['disabled'] ) ? true : false;
+	$disabled = ( isset( $_REQUEST['disabled'] ) && $_REQUEST['disabled'] == true ) ? true : false;
 	// Test if this is a comment
-	$is_comment = isset( $_REQUEST['is_comment'] ) ? 1 : 0;
+	$is_comment = ( isset( $_REQUEST['is_comment'] ) && $_REQUEST['is_comment'] == 1 ) ? 1 : 0;
 	// Base variables
 	$post_id = ( isset( $_REQUEST['post_id'] ) && is_numeric( $_REQUEST['post_id'] ) ) ? $_REQUEST['post_id'] : '';
 	$result = array();
@@ -200,13 +200,13 @@ function get_simple_likes_button( $post_id, $is_comment = NULL ) {
 	$output = '';
 	$nonce = wp_create_nonce( 'simple-likes-nonce' ); // Security
 	if ( $is_comment == 1 ) {
-		$post_id_class = ' sl-comment-button-' . $post_id;
-		$comment_class = ' sl-comment';
+		$post_id_class = esc_attr( ' sl-comment-button-' . $post_id );
+		$comment_class = esc_attr( ' sl-comment' );
 		$like_count = get_comment_meta( $post_id, "_comment_like_count", true );
 		$like_count = ( isset( $like_count ) && is_numeric( $like_count ) ) ? $like_count : 0;
 	} else {
-		$post_id_class = ' sl-button-' . $post_id;
-		$comment_class = '';
+		$post_id_class = esc_attr( ' sl-button-' . $post_id );
+		$comment_class = esc_attr( '' );
 		$like_count = get_post_meta( $post_id, "_post_like_count", true );
 		$like_count = ( isset( $like_count ) && is_numeric( $like_count ) ) ? $like_count : 0;
 	}
