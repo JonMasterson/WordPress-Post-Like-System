@@ -5,8 +5,6 @@ A simple and efficient post like system for WordPress. <a href="http://jonmaster
 
 It's a bit outdated at this point, but check out <a href="http://hofmannsven.com/2013/laboratory/wordpress-post-like-system/" target="_blank">this post</a> on <a href="https://twitter.com/hofmannsven" target="_blank">Sven Hofmann's</a> site for more information.
 
-Originally, this system utilized <a href="http://fontawesome.io/" target="_blank">Font Awesome</a> for the heart and gear icons. The Font Awesome version is still available in the <em>vendor</em> folder for those who are already using Font Awesome in their theme.
-
 <h3>Four Steps to Glory</h3>
 <ol>
   <li>Add the CSS to your theme's main stylesheet.</li>
