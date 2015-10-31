@@ -248,8 +248,11 @@ function post_user_likes( $user_id, $post_id, $is_comment ) {
 	$post_meta_users = ( $is_comment == 1 ) ? get_comment_meta( $post_id, "_user_comment_liked" ) : get_post_meta( $post_id, "_user_liked" );
 	if ( count( $post_meta_users ) != 0 ) {
 		$post_users = $post_meta_users[0];
-	}		
-	if ( is_array( $post_users ) && !in_array( $user_id, $post_users ) ) {
+	}
+	if ( !is_array( $post_users ) ) {
+		$post_users = array();
+	}
+	if ( !in_array( $user_id, $post_users ) ) {
 		$post_users['user-' . $user_id] = $user_id;
 	}
 	return $post_users;
@@ -267,7 +270,10 @@ function post_ip_likes( $user_ip, $post_id, $is_comment ) {
 	if ( count( $post_meta_users ) != 0 ) {
 		$post_users = $post_meta_users[0];
 	}
-	if ( is_array( $post_users ) && !in_array( $user_ip, $post_users ) ) {
+	if ( !is_array( $post_users ) ) {
+		$post_users = array();
+	}
+	if ( !in_array( $user_ip, $post_users ) ) {
 		$post_users['ip-' . $user_ip] = $user_ip;
 	}
 	return $post_users;
