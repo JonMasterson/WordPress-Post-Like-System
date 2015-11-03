@@ -1,0 +1,19 @@
+{
+  "name": "jonmasterson/wordpress-post-like-system",
+  "minimum-stability": "dev",
+  "description": "A simple and efficient post like system for WordPress",
+  "keywords": ["wordpress", "plugin", "like", "post"],
+  "homepage": "http://jonmasterson.com/post-like-demo/",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Jon Masterson",
+      "homepage": "http://jonmasterson.com"
+    }
+  ],
+  "type": "wordpress-plugin",
+  "require": {
+    "php": ">=5.5",
+    "composer/installers": "~1.0.12"
+  }
+}
