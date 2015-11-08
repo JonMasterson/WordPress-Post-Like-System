@@ -1,7 +1,8 @@
 <?php
 
 /*
-Name:  WordPress Post Like System
+Plugin Name:  WordPress Post Like System
+Plugin URI: http://jonmasterson.com/
 Description:  A simple and efficient post like system for WordPress.
 Version:      0.5.2
 Author:       Jon Masterson
@@ -26,7 +27,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 add_action( 'wp_enqueue_scripts', 'sl_enqueue_scripts' );
 function sl_enqueue_scripts() {
-	wp_enqueue_script( 'simple-likes-public-js', get_template_directory_uri() . '/js/simple-likes-public.js', array( 'jquery' ), '0.5', false );
+	wp_enqueue_style( 'simple-likes-public-css', plugins_url( 'css/simple-likes-public.css', __FILE__ ) );
+	wp_enqueue_script( 'simple-likes-public-js', plugins_url( 'js/simple-likes-public.js', __FILE__ ), array( 'jquery' ), '0.5', false );
 	wp_localize_script( 'simple-likes-public-js', 'simpleLikes', array(
 		'ajaxurl' => admin_url( 'admin-ajax.php' ),
 		'like' => __( 'Like', 'YourThemeTextDomain' ),
