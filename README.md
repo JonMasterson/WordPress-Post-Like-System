@@ -42,5 +42,11 @@ I've removed some functions and changed the way this system works a bit. None ar
 <h3>Issues</h3>
 This post like system is pretty simple, and does not have many moving parts. Some folks have encountered issues with AJAX-loaded content, and others have had some trouble with plugin conflicts. Feel free to open an issue if your stuck, and I will do my best to help you solve it.
 
-<h3>Coming in November</h3>
+<h3>Coming in <del>November</del> December</h3>
+We have been working hard on many updates to this system, two new plugins, and documentation. It's taking a bit longer than expected, so please bear with us. We are extending the plugin version for use with BuddyPress and bbPress as well! Here are a couple screenshots of the settings...
+
+<img src="http://jonmasterson.com/wp-content/uploads/general-settings.jpg" />
+
+<img src="http://jonmasterson.com/wp-content/uploads/post-settings.jpg" />
+
 This Post Like System will soon be offered as a free and premium plugin. The free plugin will have everything the current system does, but will be easier to manage from the WordPress admin (no more implementation errors). The premium plugin will offer AJAX widgets for Most Liked Lists that will update & respond to likes without a screen refresh, and can be managed from the WordPress admin.
