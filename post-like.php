@@ -129,7 +129,6 @@ function process_simple_like() {
 						update_comment_meta( $post_id, "_user_comment_IP", $post_users );
 					} else {
 						update_post_meta( $post_id, "_user_IP", $post_users );
-                        wp_cache_flush();
 					}
 				}
 			}
