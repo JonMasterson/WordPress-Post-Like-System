@@ -42,7 +42,7 @@ I've removed some functions and changed the way this system works a bit. None ar
 <h3>Issues</h3>
 This post like system is pretty simple, and does not have many moving parts. Some folks have encountered issues with AJAX-loaded content, and others have had some trouble with plugin conflicts. Feel free to open an issue if your stuck, and I will do my best to help you solve it.
 
-<h3>Coming in <del>November</del> December</h3>
+<h3>Coming in <del>November</del> <del>December</del> <del>January?</del> Soon</h3>
 We have been working hard on many updates to this system, two new plugins, and documentation. It's taking a bit longer than expected, so please bear with us. We are extending the plugin version for use with BuddyPress and bbPress as well! Here are a couple screenshots of the settings...
 
 <img src="http://jonmasterson.com/wp-content/uploads/general-settings.jpg" />
