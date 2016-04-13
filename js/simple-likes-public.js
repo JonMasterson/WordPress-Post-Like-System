@@ -20,7 +20,8 @@
 					action : 'process_simple_like',
 					post_id : post_id,
 					nonce : security,
-					is_comment : iscomment
+					is_comment : iscomment,
+					disabled : false
 				},
 				beforeSend:function(){
 					loader.html('&nbsp;<div class="loader">Loading...</div>');
