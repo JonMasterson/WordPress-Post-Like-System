@@ -52,6 +52,7 @@ function process_simple_like() {
 	$is_comment = ( isset( $_REQUEST['is_comment'] ) && $_REQUEST['is_comment'] == 1 ) ? 1 : 0;
 	// Base variables
 	$post_id = ( isset( $_REQUEST['post_id'] ) && is_numeric( $_REQUEST['post_id'] ) ) ? $_REQUEST['post_id'] : '';
+	$is_refresh = ( isset( $_REQUEST['is_refresh'] ) && $_REQUEST['is_refresh'] == true ) ? true : false;
 	$result = array();
 	$post_users = NULL;
 	$like_count = 0;
@@ -59,97 +60,103 @@ function process_simple_like() {
 	if ( $post_id != '' ) {
 		$count = ( $is_comment == 1 ) ? get_comment_meta( $post_id, "_comment_like_count", true ) : get_post_meta( $post_id, "_post_like_count", true ); // like count
 		$count = ( isset( $count ) && is_numeric( $count ) ) ? $count : 0;
-		if ( !already_liked( $post_id, $is_comment ) ) { // Like the post
-			if ( is_user_logged_in() ) { // user is logged in
-				$user_id = get_current_user_id();
-				$post_users = post_user_likes( $user_id, $post_id, $is_comment );
-				if ( $is_comment == 1 ) {
-					// Update User & Comment
-					$user_like_count = get_user_option( "_comment_like_count", $user_id );
-					$user_like_count =  ( isset( $user_like_count ) && is_numeric( $user_like_count ) ) ? $user_like_count : 0;
-					update_user_option( $user_id, "_comment_like_count", ++$user_like_count );
-					if ( $post_users ) {
-						update_comment_meta( $post_id, "_user_comment_liked", $post_users );
-					}
-				} else {
-					// Update User & Post
-					$user_like_count = get_user_option( "_user_like_count", $user_id );
-					$user_like_count =  ( isset( $user_like_count ) && is_numeric( $user_like_count ) ) ? $user_like_count : 0;
-					update_user_option( $user_id, "_user_like_count", ++$user_like_count );
-					if ( $post_users ) {
-						update_post_meta( $post_id, "_user_liked", $post_users );
-					}
-				}
-			} else { // user is anonymous
-				$user_ip = sl_get_ip();
-				$post_users = post_ip_likes( $user_ip, $post_id, $is_comment );
-				// Update Post
-				if ( $post_users ) {
-					if ( $is_comment == 1 ) {
-						update_comment_meta( $post_id, "_user_comment_IP", $post_users );
-					} else { 
-						update_post_meta( $post_id, "_user_IP", $post_users );
-					}
-				}
-			}
-			$like_count = ++$count;
-			$response['status'] = "liked";
-			$response['icon'] = get_liked_icon();
-		} else { // Unlike the post
-			if ( is_user_logged_in() ) { // user is logged in
-				$user_id = get_current_user_id();
-				$post_users = post_user_likes( $user_id, $post_id, $is_comment );
-				// Update User
-				if ( $is_comment == 1 ) {
-					$user_like_count = get_user_option( "_comment_like_count", $user_id );
-					$user_like_count =  ( isset( $user_like_count ) && is_numeric( $user_like_count ) ) ? $user_like_count : 0;
-					if ( $user_like_count > 0 ) {
-						update_user_option( $user_id, "_comment_like_count", --$user_like_count );
-					}
-				} else {
-					$user_like_count = get_user_option( "_user_like_count", $user_id );
-					$user_like_count =  ( isset( $user_like_count ) && is_numeric( $user_like_count ) ) ? $user_like_count : 0;
-					if ( $user_like_count > 0 ) {
-						update_user_option( $user_id, '_user_like_count', --$user_like_count );
-					}
-				}
-				// Update Post
-				if ( $post_users ) {	
-					$uid_key = array_search( $user_id, $post_users );
-					unset( $post_users[$uid_key] );
-					if ( $is_comment == 1 ) {
-						update_comment_meta( $post_id, "_user_comment_liked", $post_users );
-					} else { 
-						update_post_meta( $post_id, "_user_liked", $post_users );
-					}
-				}
-			} else { // user is anonymous
-				$user_ip = sl_get_ip();
-				$post_users = post_ip_likes( $user_ip, $post_id, $is_comment );
-				// Update Post
-				if ( $post_users ) {
-					$uip_key = array_search( $user_ip, $post_users );
-					unset( $post_users[$uip_key] );
-					if ( $is_comment == 1 ) {
-						update_comment_meta( $post_id, "_user_comment_IP", $post_users );
-					} else { 
-						update_post_meta( $post_id, "_user_IP", $post_users );
-					}
-				}
-			}
-			$like_count = ( $count > 0 ) ? --$count : 0; // Prevent negative number
-			$response['status'] = "unliked";
+		if ( $is_refresh ) {
+			$response['count'] = get_like_count( $count );
 			$response['icon'] = get_unliked_icon();
+		    }
+	    	else {
+			if ( !already_liked( $post_id, $is_comment ) ) { // Like the post
+				if ( is_user_logged_in() ) { // user is logged in
+					$user_id = get_current_user_id();
+					$post_users = post_user_likes( $user_id, $post_id, $is_comment );
+					if ( $is_comment == 1 ) {
+						// Update User & Comment
+						$user_like_count = get_user_option( "_comment_like_count", $user_id );
+						$user_like_count =  ( isset( $user_like_count ) && is_numeric( $user_like_count ) ) ? $user_like_count : 0;
+						update_user_option( $user_id, "_comment_like_count", ++$user_like_count );
+						if ( $post_users ) {
+							update_comment_meta( $post_id, "_user_comment_liked", $post_users );
+						}
+					} else {
+						// Update User & Post
+						$user_like_count = get_user_option( "_user_like_count", $user_id );
+						$user_like_count =  ( isset( $user_like_count ) && is_numeric( $user_like_count ) ) ? $user_like_count : 0;
+						update_user_option( $user_id, "_user_like_count", ++$user_like_count );
+						if ( $post_users ) {
+							update_post_meta( $post_id, "_user_liked", $post_users );
+						}
+					}
+				} else { // user is anonymous
+					$user_ip = sl_get_ip();
+					$post_users = post_ip_likes( $user_ip, $post_id, $is_comment );
+					// Update Post
+					if ( $post_users ) {
+						if ( $is_comment == 1 ) {
+							update_comment_meta( $post_id, "_user_comment_IP", $post_users );
+						} else { 
+							update_post_meta( $post_id, "_user_IP", $post_users );
+						}
+					}
+				}
+				$like_count = ++$count;
+				$response['status'] = "liked";
+				$response['icon'] = get_liked_icon();
+			} else { // Unlike the post
+				if ( is_user_logged_in() ) { // user is logged in
+					$user_id = get_current_user_id();
+					$post_users = post_user_likes( $user_id, $post_id, $is_comment );
+					// Update User
+					if ( $is_comment == 1 ) {
+						$user_like_count = get_user_option( "_comment_like_count", $user_id );
+						$user_like_count =  ( isset( $user_like_count ) && is_numeric( $user_like_count ) ) ? $user_like_count : 0;
+						if ( $user_like_count > 0 ) {
+							update_user_option( $user_id, "_comment_like_count", --$user_like_count );
+						}
+					} else {
+						$user_like_count = get_user_option( "_user_like_count", $user_id );
+						$user_like_count =  ( isset( $user_like_count ) && is_numeric( $user_like_count ) ) ? $user_like_count : 0;
+						if ( $user_like_count > 0 ) {
+							update_user_option( $user_id, '_user_like_count', --$user_like_count );
+						}
+					}
+					// Update Post
+					if ( $post_users ) {	
+						$uid_key = array_search( $user_id, $post_users );
+						unset( $post_users[$uid_key] );
+						if ( $is_comment == 1 ) {
+							update_comment_meta( $post_id, "_user_comment_liked", $post_users );
+						} else { 
+							update_post_meta( $post_id, "_user_liked", $post_users );
+						}
+					}
+				} else { // user is anonymous
+					$user_ip = sl_get_ip();
+					$post_users = post_ip_likes( $user_ip, $post_id, $is_comment );
+					// Update Post
+					if ( $post_users ) {
+						$uip_key = array_search( $user_ip, $post_users );
+						unset( $post_users[$uip_key] );
+						if ( $is_comment == 1 ) {
+							update_comment_meta( $post_id, "_user_comment_IP", $post_users );
+						} else { 
+							update_post_meta( $post_id, "_user_IP", $post_users );
+						}
+					}
+				}
+				$like_count = ( $count > 0 ) ? --$count : 0; // Prevent negative number
+				$response['status'] = "unliked";
+				$response['icon'] = get_unliked_icon();
+			}
+			if ( $is_comment == 1 ) {
+				update_comment_meta( $post_id, "_comment_like_count", $like_count );
+				update_comment_meta( $post_id, "_comment_like_modified", date( 'Y-m-d H:i:s' ) );
+			} else { 
+				update_post_meta( $post_id, "_post_like_count", $like_count );
+				update_post_meta( $post_id, "_post_like_modified", date( 'Y-m-d H:i:s' ) );
+			}
+			$response['count'] = get_like_count( $like_count );
+			$response['testing'] = $is_comment;
 		}
-		if ( $is_comment == 1 ) {
-			update_comment_meta( $post_id, "_comment_like_count", $like_count );
-			update_comment_meta( $post_id, "_comment_like_modified", date( 'Y-m-d H:i:s' ) );
-		} else { 
-			update_post_meta( $post_id, "_post_like_count", $like_count );
-			update_post_meta( $post_id, "_post_like_modified", date( 'Y-m-d H:i:s' ) );
-		}
-		$response['count'] = get_like_count( $like_count );
-		$response['testing'] = $is_comment;
 		if ( $disabled == true ) {
 			if ( $is_comment == 1 ) {
 				wp_redirect( get_permalink( get_the_ID() ) );
@@ -225,7 +232,7 @@ function get_simple_likes_button( $post_id, $is_comment = NULL ) {
 		$title = __( 'Like', 'YourThemeTextDomain' );
 		$icon = $icon_empty;
 	}
-	$output = '<span class="sl-wrapper"><a href="' . admin_url( 'admin-ajax.php?action=process_simple_like' . '&post_id=' . $post_id . '&nonce=' . $nonce . '&is_comment=' . $is_comment . '&disabled=true' ) . '" class="sl-button' . $post_id_class . $class . $comment_class . '" data-nonce="' . $nonce . '" data-post-id="' . $post_id . '" data-iscomment="' . $is_comment . '" title="' . $title . '">' . $icon . $count . '</a>' . $loader . '</span>';
+	$output = '<span class="sl-wrapper"><a href="' . admin_url( 'admin-ajax.php?action=process_simple_like' . '&post_id=' . $post_id . '&nonce=' . $nonce . '&is_comment=' . $is_comment . '&disabled=true' ) . '" id="sl-button" class="' . $post_id_class . $class . $comment_class . '" data-nonce="' . $nonce . '" data-post-id="' . $post_id . '" data-iscomment="' . $is_comment . '" data-isrefresh="true" title="' . $title . '">' . $icon . $count . '</a>' . $loader . '</span>';
 	return $output;
 } // get_simple_likes_button()
 
