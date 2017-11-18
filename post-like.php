@@ -52,7 +52,7 @@ function process_simple_like() {
 	$is_comment = ( isset( $_REQUEST['is_comment'] ) && $_REQUEST['is_comment'] == 1 ) ? 1 : 0;
 	// Base variables
 	$post_id = ( isset( $_REQUEST['post_id'] ) && is_numeric( $_REQUEST['post_id'] ) ) ? $_REQUEST['post_id'] : '';
-	$isrefresh = ( isset( $_REQUEST['is_refresh'] ) && $_REQUEST['is_refresh'] == true ) ? true : false;
+	$is_refresh = ( isset( $_REQUEST['is_refresh'] ) && $_REQUEST['is_refresh'] == true ) ? true : false;
 	$result = array();
 	$post_users = NULL;
 	$like_count = 0;
@@ -60,7 +60,7 @@ function process_simple_like() {
 	if ( $post_id != '' ) {
 		$count = ( $is_comment == 1 ) ? get_comment_meta( $post_id, "_comment_like_count", true ) : get_post_meta( $post_id, "_post_like_count", true ); // like count
 		$count = ( isset( $count ) && is_numeric( $count ) ) ? $count : 0;
-		if ( $isrefresh ) {
+		if ( $is_refresh ) {
 			$response['count'] = get_like_count( $count );
 			$response['icon'] = get_unliked_icon();
 		    }
