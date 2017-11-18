@@ -61,10 +61,10 @@ function process_simple_like() {
 		$count = ( $is_comment == 1 ) ? get_comment_meta( $post_id, "_comment_like_count", true ) : get_post_meta( $post_id, "_post_like_count", true ); // like count
 		$count = ( isset( $count ) && is_numeric( $count ) ) ? $count : 0;
 		if ( $isrefresh ) {
-	        $response['count'] = get_like_count( $count );
-    		$response['icon'] = get_unliked_icon();
-	    }
-	    else {
+			$response['count'] = get_like_count( $count );
+			$response['icon'] = get_unliked_icon();
+		    }
+	    	else {
 			if ( !already_liked( $post_id, $is_comment ) ) { // Like the post
 				if ( is_user_logged_in() ) { // user is logged in
 					$user_id = get_current_user_id();
