@@ -40,7 +40,4 @@ I've removed some functions and changed the way this system works a bit. None ar
 </ul>
 
 <h3>Issues</h3>
-This post like system is pretty simple, and does not have many moving parts. Some folks have encountered issues with AJAX-loaded content, and others have had some trouble with plugin conflicts. Feel free to open an issue if your stuck, and I will do my best to help you solve it.
-<img src="http://jonmasterson.com/wp-content/uploads/post-settings.jpg" />
-
-This Post Like System will soon be offered as a free and premium plugin. The free plugin will have everything the current system does, but will be easier to manage from the WordPress admin (no more implementation errors). The premium plugin will offer AJAX widgets for Most Liked Lists that will update & respond to likes without a screen refresh, and can be managed from the WordPress admin.
+This post like system is pretty simple, and does not have many moving parts. Some folks have encountered issues with AJAX-loaded content, and others have had some trouble with plugin conflicts.
